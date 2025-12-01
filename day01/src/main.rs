@@ -1,6 +1,8 @@
 use std::str::FromStr;
 use utilities::{ParseError, read_list};
 
+const DRUMM: i32 = 100;
+
 enum Dir {
     Left,
     Right,
@@ -31,6 +33,8 @@ fn main() -> std::io::Result<()> {
     println!("Simple value: {}", simple_val);
     let complex_val = resolve_complex(&input);
     println!("Complex value: {}", complex_val);
+    let complex_val_2 = resolve_complex_2(&input);
+    println!("Complex value 2: {}", complex_val_2);
 
     Ok(())
 }
@@ -43,7 +47,7 @@ fn resolve_simple(input: &[Line]) -> usize {
             Dir::Left => state -= *off,
             Dir::Right => state += *off,
         };
-        state %= 100;
+        state %= DRUMM;
         if state == 0 {
             out += 1;
         }
@@ -61,12 +65,41 @@ fn resolve_complex(input: &[Line]) -> usize {
         };
 
         out += (1..=*off)
-            .map(|off| (state + mul * off) % 100)
+            .map(|off| (state + mul * off) % DRUMM)
             .filter(|i| *i == 0)
             .count();
         state += mul * *off;
     }
     out
+}
+
+fn resolve_complex_2(input: &[Line]) -> usize {
+    let mut state = 50;
+    let mut out = 0;
+
+    for Line { dir, off } in input {
+        out += (off / DRUMM) as usize;
+        state += match dir {
+            Dir::Left => {
+                out += count_rest_rotation_neg(state, off % DRUMM);
+                -*off
+            }
+            Dir::Right => {
+                out += count_rest_rotation_pos(state, off % DRUMM);
+                *off
+            }
+        };
+        state = state.rem_euclid(DRUMM);
+    }
+
+    out
+}
+
+fn count_rest_rotation_pos(state: i32, off: i32) -> usize {
+    if state + off >= DRUMM { 1 } else { 0 }
+}
+fn count_rest_rotation_neg(state: i32, off: i32) -> usize {
+    if state - off <= 0 && state > 0 { 1 } else { 0 }
 }
 
 #[cfg(test)]
@@ -86,5 +119,10 @@ mod day01_tests {
     fn complex_01() {
         let input = read_input();
         assert_eq!(6, resolve_complex(&input));
+    }
+    #[test]
+    fn complex_02() {
+        let input = read_input();
+        assert_eq!(6, resolve_complex_2(&input));
     }
 }
