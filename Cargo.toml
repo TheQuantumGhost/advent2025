@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "day01",
+    "day02",
     "derive_from_char",
     "utilities",
 ]

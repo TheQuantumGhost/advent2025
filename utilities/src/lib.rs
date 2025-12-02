@@ -30,6 +30,18 @@ where
         .collect::<Result<Vec<_>, _>>()
         .map_err(std::io::Error::other)
 }
+pub fn read_comma_list<T>(path: &str) -> IOResult<Vec<T>>
+where
+    T: FromStr,
+    <T as FromStr>::Err: std::error::Error + Sync + Send + 'static,
+{
+    read_to_string(path)?
+        .split(',')
+        .filter(|&s| !s.is_empty())
+        .map(|s| s.parse::<T>())
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(std::io::Error::other)
+}
 
 pub fn read_list_str<T>(text: &str) -> Result<Vec<T>, T::Err>
 where
