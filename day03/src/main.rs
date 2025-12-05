@@ -1,8 +1,6 @@
 use std::str::FromStr;
 use utilities::{ParseError, read_list};
 
-mod generic;
-
 #[derive(Debug, PartialEq)]
 struct Bank {
     joltages: Vec<u32>,
