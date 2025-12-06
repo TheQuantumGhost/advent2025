@@ -18,3 +18,6 @@ For the second part, it was a bit more complicated, the criteria is that if an i
 For the first problem, I first tried to track the max value and iterating each bank back to front but it  was a clunky solution. A further analysis of the problem shows us that the `tens` place is the maximum over the range except the last one, and the `ones` place is the max over the range from the index of the `tens` to the end. This gave us the first solution.
 
 This method generalises quite easily for the second problem, we just have to take care with the exclusion of the range's end.
+
+## [Day 04](https://adventofcode.com/2025/day/4)
+The first problem is as simple as iterating over the grid an counting the occupied neighbors, for the second one it's just a matter of using the solution to the first problem and looping simulating a Conway's game of life like.
